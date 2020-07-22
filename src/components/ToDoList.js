@@ -71,24 +71,26 @@ export default class ToDoList extends Component {
         const {todos} = this.state
 
         return (
-            <div className="App">
+            <>
+                <div className="App">
 
-                <form onSubmit={(e) => {
-                    this.addTodo(e)
-                }}
-                >
-                    {/*CONTROLLED se settiamo noi il valore - UNCONTROLLED se il valore viene gestito da 'html'*/}
-                    <input
-                        type="text"
-                        value={this.state.todo.plainText}
-                        onChange={(e) => {
-                            this.handleChange(e)
-                        }}
-                        placeholder="add new element"
-                    />
-                    <button type="submit">Add Todo
-                    </button>
-                </form>
+                    <form onSubmit={(e) => {
+                        this.addTodo(e)
+                    }}
+                    >
+                        {/*CONTROLLED se settiamo noi il valore - UNCONTROLLED se il valore viene gestito da 'html'*/}
+                        <input
+                            type="text"
+                            value={this.state.todo.plainText}
+                            onChange={(e) => {
+                                this.handleChange(e)
+                            }}
+                            placeholder="add new element"
+                        />
+                        <button type="submit">Add Todo
+                        </button>
+                    </form>
+                </div>
 
                 <ul>
                     {todos.map(todo =>
@@ -97,7 +99,7 @@ export default class ToDoList extends Component {
                         </li>
                     )}
                 </ul>
-            </div>
+            </>
         )
     }
 }
