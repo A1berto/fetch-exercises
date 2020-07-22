@@ -13,6 +13,11 @@ export default class ToDoList extends Component {
         super(props)
         this.state = {
             todos: [],
+            todo: {
+                key: null,
+                name: null,
+                plainText: null
+            }
         }
     }
 
@@ -28,7 +33,6 @@ export default class ToDoList extends Component {
                 this.setState({
                     todos: json
                 }, () => {
-                    console.log("ho finito la callback del setState");
                     console.log("vedo cosa mi torna la fetch: " + todos);
                     console.log("vedo cosa mi torna lo state: " + this.state.todos);
                 })
@@ -36,13 +40,49 @@ export default class ToDoList extends Component {
             });
     }
 
-    //MAI FARE UN SET STATE ALL'INTERNO DI UN RENDER!!!!!!!!!!!!!!!!!!!!!!
+    //vedere bene cosa fa il preventDefault (forse non fa refreshare la pagina)
+    //aggiungo un todo con i suoi parametri prima di tutti gli altri todo.
+    addTodo(e) {
+        e.preventDefault();
+        this.setState({
+            todo: {
+                key: this.state.todos.length,
+            }
+        })
+        this.setState({
+            todos: [this.state.todo, ...this.state.todos]
+        })
+    }
+
+    //man mano che scrivo nell'input modifico il valore di plainText.
+    //quando farò submit avrò già il valore pronto e settato nello state
+    handleChange(e) {
+        this.setState({
+            todo: {
+                plainText: e.target.value
+            }
+        }, () => {
+            console.log("Set state fatto  " + this.state.todo.plainText + this.state.todos.length);
+        })
+    }
+
+    //!!!!!!!! MAI FARE UN SET STATE ALL'INTERNO DI UN RENDER !!!!!!!!!
 
     //https://stackoverflow.com/questions/44574367/react-map-is-not-a-function   per le promise
     render() {
         const { todos } = this.state;
         return (
             <div className="App">
+
+                <form onSumbit={(e) => { this.addTodo(e) }}>
+                    <input
+                        type="text"
+                        value={this.state.value}
+                        onChange={(e) => { this.handleChange(e) }}
+                        placeholder="add new element" />
+                    <button onClick={(e) => { this.addTodo(e) }}>Add Todo</button>
+                </form>
+
                 <ul>
                     {todos.map(todo =>
                         <li key={todo.key}>
@@ -53,17 +93,4 @@ export default class ToDoList extends Component {
             </div>
         )
     }
-
 }
-
-
-/*
-<ul>
-              {todos.map((todo) => (
-                <li key={todo.id}>
-                  {" "}
-                  Name: {todo.name} | PlainText: {todo.plainText}
-                </li>
-              ))}
-            </ul>
-*/
