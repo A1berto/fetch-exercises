@@ -3,11 +3,33 @@ const DEFAULT = "api/v1/todos"                  //serviva con il tuo link, servi
 const URL = "http://demo1526987.mockable.io/"
 
 
-
 export const getToDoList = () => {
-    return fetch(URL)
-        .then((res) => res.json())
+    // se passo una stringa mi chiama il servizio come fosse una GET
+    return fetch(URL).then(res => res.json())/*.then(json => json.body)*/
 }
+
+
+/* esempio di possibile response
+
+const json = {
+    body: {
+        listaTodos: [
+
+        ]
+    }
+}*/
+
+
+/*
+
+ESEMPIO DI PROMISE FATTA A MANO
+
+const sommaDaFileAsync = new Promise((resolve, reject) => {
+    /!*... logica ...*!/
+    const somma = 5
+    const messaggioErrore = 'Impossibile calcolare la somma'
+    somma  > 10 ? resolve(somma) : reject(messaggioErrore)
+})*/
 
 /*
 fetch(url)
