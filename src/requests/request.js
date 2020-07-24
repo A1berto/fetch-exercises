@@ -1,11 +1,18 @@
 
 const DEFAULT = "api/v1/todos"                  //serviva con il tuo link, servirà.
-const URL = "http://demo1526987.mockable.io/"
+const URL = "https://5f1563064693a600162756a6.mockapi.io/api/v1/todos"
 
 
 export const getToDoList = () => {
     // se passo una stringa mi chiama il servizio come fosse una GET
     return fetch(URL).then(res => res.json())/*.then(json => json.body)*/
+}
+
+
+export const postToDoList = async(options) =>{
+    const response= await fetch(URL, options)
+    const data = await response.json();
+    return data;
 }
 
 
