@@ -36,7 +36,7 @@ export default class ToDoList extends Component {
         })
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         getToDoList().then(response => {
             this.setState({
                 todos: response.sort((a, b) => a - b).reverse()
@@ -61,7 +61,8 @@ export default class ToDoList extends Component {
                 <ul>
                     {
                         todos.map(todo =>
-                            <li key={todo.key}>
+                            <li style={{ listStyle:"none"}}
+                                key={todo.key}>
                                 {todo.plainText}
                             </li>
                         )}

@@ -15,6 +15,7 @@ export default class ToDoForm extends Component {
     }
 
     addTodo(e) {
+        
         console.log("dentro addTodo");
         e.preventDefault()
         e.stopPropagation()
@@ -24,6 +25,12 @@ export default class ToDoForm extends Component {
                 plainText: this.state.plainText,
             }
             //non setto pure la key perchè lo fa il backend
+        },()=>{
+            this.setState({
+                todo:{
+                    plainText: ""
+                }
+            })
         })
 
         const options={
