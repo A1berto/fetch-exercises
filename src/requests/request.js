@@ -1,6 +1,6 @@
 
 const DEFAULT = "api/v1/todos"                  //serviva con il tuo link, servirà.
-const URL = "https://5f1563064693a600162756a6.mockapi.io/api/v1/todos"
+const URL = "https://5f1563064693a600162756a6.mockapi.io/" + DEFAULT
 
 
 export const getToDoList = () => {

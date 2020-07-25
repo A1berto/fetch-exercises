@@ -31,7 +31,7 @@ export default class ToDoList extends Component {
     componentDidMount() {
         getToDoList().then(response => {
             this.setState({
-                todos: response.sort()
+                todos: response.sort((a, b) => a - b).reverse()
             })
         })
     }
@@ -39,7 +39,7 @@ export default class ToDoList extends Component {
     componentDidUpdate(){
         getToDoList().then(response => {
             this.setState({
-                todos: response
+                todos: response.sort((a, b) => a - b).reverse()
             })
         })
     }
