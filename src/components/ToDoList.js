@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { getToDoList } from '../requests/request'
 import ToDoForm from "../components/ToDoForm"
+import ToDo from "../components/ToDo"
 
 /*
 IMPORT: con le parentesi graffe mi richiamo una funzione dentro un altro file
@@ -28,20 +29,23 @@ export default class ToDoList extends Component {
     se si aggiornano le props del componente padre
     */
 
-    componentDidMount() {
+    refresh() {
         getToDoList().then(response => {
+            response = response
             this.setState({
-                todos: response.sort((a, b) => a - b).reverse()
+                todos: response
+                //devo metterli in inversamente!!
             })
         })
+
+    }
+
+    componentDidMount() {
+        this.refresh()
     }
 
     componentDidUpdate() {
-        getToDoList().then(response => {
-            this.setState({
-                todos: response.sort((a, b) => a - b).reverse()
-            })
-        })
+        this.refresh()
     }
 
     // vedere bene cosa fa il preventDefault
@@ -61,13 +65,11 @@ export default class ToDoList extends Component {
                 <ul>
                     {
                         todos.map(todo =>
-                            <li style={{ listStyle:"none"}}
-                                key={todo.key}>
-                                {todo.plainText}
-                            </li>
+                            <ToDo
+                                id={todo.id}
+                                plainText={todo.plainText} />
                         )}
                 </ul>
-
             </div>
 
         )

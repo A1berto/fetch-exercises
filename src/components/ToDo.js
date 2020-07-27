@@ -1,11 +1,20 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
+import { deleteToDoList, getToDoList } from "../requests/request"
 
-export default (props) =>{
-    <div style={{display:"flex", justifyContent:"center"}}>
-        <div>
-            {props.todo.plainText}
+export default function ToDo(props) {
+    const [key] = useState(props.id)
+    const [plainText] = useState(props.plainText)
+
+    function deleteToDo() {
+        deleteToDoList(key);
+    }
+    
+    return (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+            <li key={key}>
+                {plainText}
+            </li>
+            <button onClick={deleteToDo}>x</button>
         </div>
-        <button onClick={propr.deleteToDo}>x</button>
-    </div>
-
+    )
 }

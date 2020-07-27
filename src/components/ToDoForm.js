@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import {postToDoList, getToDoList} from "../requests/request"
+import { postToDoList } from "../requests/request"
 
 
 export default class ToDoForm extends Component {
@@ -15,36 +15,28 @@ export default class ToDoForm extends Component {
     }
 
     addTodo(e) {
-        
-        console.log("dentro addTodo");
         e.preventDefault()
         e.stopPropagation()
         console.log('form', e.target)
-        this.setState({
-            todo: {
-                plainText: this.state.plainText,
-            }
-            //non setto pure la key perchè lo fa il backend
-        },()=>{
-            this.setState({
-                todo:{
-                    plainText: ""
-                }
-            })
-        })
 
-        const options={
+        const options = {
             method: "POST",
-            body: JSON.stringify({ 
-                name: this.state.todo.name, 
+            body: JSON.stringify({
+                name: this.state.todo.name,
                 plainText: this.state.todo.plainText,
             }),
-            headers: { 
+            headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
         }
         // richiamo il servizio di POST per aggiungere un task
-        postToDoList(options)
+        postToDoList(options).then(() => {
+            this.setState({
+                todo: {
+                    plainText: ""
+                }
+            })
+        })
     }
 
     //man mano che scrivo nell'input modifico il valore di plainText.
@@ -59,23 +51,23 @@ export default class ToDoForm extends Component {
 
     render() {
         return (
-        <>
-            <form onSubmit={(e) => {
-                this.addTodo(e)
-            }}
-            >
-                {/*CONTROLLED se settiamo noi il valore - UNCONTROLLED se il valore viene gestito da 'html'*/}
-                <input
-                    type="text"
-                    value={this.state.todo.plainText}
-                    onChange={(e) => {
-                        this.handleChange(e)
-                    }}
-                    placeholder="add new element"
-                />
-                <button type="submit">Add Todo
+            <>
+                <form onSubmit={(e) => {
+                    this.addTodo(e)
+                }}
+                >
+                    {/*CONTROLLED se settiamo noi il valore - UNCONTROLLED se il valore viene gestito da 'html'*/}
+                    <input
+                        type="text"
+                        value={this.state.todo.plainText}
+                        onChange={(e) => {
+                            this.handleChange(e)
+                        }}
+                        placeholder="add new element"
+                    />
+                    <button type="submit">Add Todo
                 </button>
-            </form>
+                </form>
             </>
         )
     }

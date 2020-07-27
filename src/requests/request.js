@@ -1,5 +1,5 @@
 
-const DEFAULT = "api/v1/todos"                  
+const DEFAULT = "api/v1/todos"
 const URL = "https://5f1563064693a600162756a6.mockapi.io/" + DEFAULT
 
 
@@ -8,12 +8,18 @@ export const getToDoList = () => {
     return fetch(URL).then(res => res.json())/*.then(json => json.body)*/
 }
 
-
-export const postToDoList = async(options) =>{
-    const response= await fetch(URL, options)
+export const postToDoList = async (options) => {
+    const response = await fetch(URL, options)
     const data = await response.json();
     return data;
 }
+
+
+export const deleteToDoList = async (id) => {
+    const response = await fetch(URL + "/" + id, { method: "delete" })
+    
+}
+
 
 
 /* esempio di possibile response
