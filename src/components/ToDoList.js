@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { getToDoList } from '../requests/request'
-import ToDoForm from "../components/ToDoForm"
-import ToDo from "../components/ToDo"
+import React, {Component} from 'react'
+import {deleteToDoList, getToDoList, postToDoList} from '../requests/request'
+import {NewLabelForm} from './NewLabelForm'
+import ListItem from './ListItem'
 
 /*
 IMPORT: con le parentesi graffe mi richiamo una funzione dentro un altro file
@@ -17,7 +17,6 @@ export default class ToDoList extends Component {
         this.state = {
             todos: [],
             todo: {
-                name: null,
                 plainText: ''
             }
         }
@@ -29,46 +28,65 @@ export default class ToDoList extends Component {
     se si aggiornano le props del componente padre
     */
 
-    refresh() {
+    deleteTodo = (todoId) => {
+        deleteToDoList(todoId).then(succ => {
+            this.setState({
+                todos: this.state.todos.filter(val => val.id !== todoId)
+            })
+        })
+    }
+
+    updateToDoList() {
         getToDoList().then(response => {
-            response = response
             this.setState({
                 todos: response
                 //devo metterli in inversamente!!
             })
-        })
-
+        }).catch(e => console.error('IMPOSSIBILE AGGIORNARE LA LISTA', e))
     }
 
     componentDidMount() {
-        this.refresh()
-    }
-
-    componentDidUpdate() {
-        this.refresh()
+        // la prima volta che viene rederizzato chiamo la lista
+        this.updateToDoList()
     }
 
     // vedere bene cosa fa il preventDefault
     // aggiungo un todo con i suoi parametri prima di tutti gli altri todo.
 
 
+    handleSubmit = (text) => {
+        const body = {
+            plainText: text,
+        }
+        // richiamo il servizio di POST per aggiungere un task
+        postToDoList(body).then((succ) => {
+            this.updateToDoList()
+        }).catch(e => console.error('IMpossibile aggiungere il TODO: ', text))
+    }
+
 
     //!!!!!!!! MAI FARE UN SET STATE ALL'INTERNO DI UN RENDER !!!!!!!!!
 
     //https://stackoverflow.com/questions/44574367/react-map-is-not-a-function  per le promise
     render() {
-        const { todos } = this.state
+        const {todos} = this.state
 
         return (
             <div className="App">
-                <ToDoForm todos={this.state.todos} />
+                <NewLabelForm handleSubmit={this.handleSubmit}/>
                 <ul>
                     {
-                        todos.map(todo =>
-                            <ToDo
-                                id={todo.id}
-                                plainText={todo.plainText} />
-                        )}
+                        todos
+                            .sort((todoA, todoB) => todoB.id - todoA.id)
+                            .map(todo =>
+                                <ListItem
+                                    key={todo.id}
+                                    deleteFnc={() => this.deleteTodo(todo.id)}
+                                    editFnc={this.editTodo}
+                                    id={todo.id}
+                                    creationDate={todo.createdAt}
+                                    plainText={todo.plainText}/>
+                            )}
                 </ul>
             </div>
 

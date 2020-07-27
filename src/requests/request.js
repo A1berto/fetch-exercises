@@ -8,8 +8,15 @@ export const getToDoList = () => {
     return fetch(URL).then(res => res.json())/*.then(json => json.body)*/
 }
 
-export const postToDoList = async (options) => {
-    const response = await fetch(URL, options)
+// TODO aggiornare tutta la lista al success
+export const postToDoList = async (body) => {
+    const response = await fetch(URL, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    })
     const data = await response.json();
     return data;
 }
@@ -17,7 +24,7 @@ export const postToDoList = async (options) => {
 
 export const deleteToDoList = async (id) => {
     const response = await fetch(URL + "/" + id, { method: "delete" })
-    
+
 }
 
 
