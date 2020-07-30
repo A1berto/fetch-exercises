@@ -8,7 +8,7 @@ export const getToDoList = () => {
     return fetch(URL).then(res => res.json())/*.then(json => json.body)*/
 }
 
-// TODO aggiornare tutta la lista al success
+
 export const postToDoList = async (body) => {
     const response = await fetch(URL, {
         method: 'POST',
@@ -24,7 +24,24 @@ export const postToDoList = async (body) => {
 
 export const deleteToDoList = async (id) => {
     const response = await fetch(URL + "/" + id, { method: "delete" })
+    return response
+}
 
+
+export const editToDoList = async (id,plaintext) =>{
+    const body={
+        plainText: plaintext,
+    }
+    const response = await fetch(URL + "/" +id,{
+        method:'PUT',
+        body: JSON.stringify(body),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    })
+    const data = await response.json()
+    return data
 }
 
 

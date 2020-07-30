@@ -1,14 +1,27 @@
-import React, {useState, useEffect} from 'react'
-import {deleteToDoList, getToDoList} from '../requests/request'
+import React, {useState} from 'react'
 
-
-// deleteFnc(e)
 
 export default function ListItem(props) {
+    const [label, setLabel] = useState(props.plainText)
+
+    const handleChange = (e) => {
+        setLabel(e.target.value)
+    }
+
     return (
         <div style={{display: 'flex', justifyContent: 'center'}}>
             <li key={props.id}>
-                {props.plainText} ({props.creationDate})
+                {!props.enabled ?
+                    <span> {props.plainText} ({props.creationDate}) </span>
+                    : <>
+                        <input type="text"
+                               value={label}
+                               onChange={(e) => handleChange(e)}/>
+                    </>
+                }
+
+
+                <button onClick={!props.enabled? ()=>props.editFnc(label) : ()=>props.editFinal(label)}> {!props.enabled ? "Modify" : " Change Effectively"}</button>
                 <button onClick={props.deleteFnc}>x</button>
             </li>
         </div>

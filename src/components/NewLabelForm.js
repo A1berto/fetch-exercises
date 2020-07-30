@@ -1,5 +1,4 @@
-import React, {Component, useState} from 'react'
-import {postToDoList} from '../requests/request'
+import React, {useState} from 'react'
 
 
 /*
@@ -9,9 +8,30 @@ import {postToDoList} from '../requests/request'
  */
 export const NewLabelForm = props => {
 
-    const [label, setLabel] = useState('')
+    const [label, setLabel] = useState()
+
+/*FORMAZIONE
+//per tutti gli stati/props all'inizio: (ComponentDidMount)
+    useEffect(()=>{
+        console.log(label)
+    },[])
+
+    //per uno specifico stato/props (sempre, per ogni volta che si aggiorna, anche la prima volta di inizializzazione)
+    useEffect(()=>{
+        console.log(label)
+    },[label])
+
+    //solo per il componentDidUnmount
+    useEffect(()=>{
+        console.log(label)
+        return ()=>{
+            console.log("componentDidUnmount")
+        }
+    },[])
+*/
 
     const addTodo = (e) => {
+
         e.preventDefault()
         e.stopPropagation()
         props.handleSubmit(label)

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {deleteToDoList, getToDoList, postToDoList} from '../requests/request'
+import {deleteToDoList, getToDoList, postToDoList, editToDoList} from '../requests/request'
 import {NewLabelForm} from './NewLabelForm'
 import ListItem from './ListItem'
 
@@ -17,7 +17,7 @@ export default class ToDoList extends Component {
         this.state = {
             todos: [],
             todo: {
-                plainText: ''
+                plainText: '',
             }
         }
     }
@@ -36,11 +36,29 @@ export default class ToDoList extends Component {
         })
     }
 
+
+    editTodo = (todoId) => {
+        console.log("dentro editTodo: ", todoId)
+        this.setState({
+            //...this.state         lo fa in automatico
+            editTodoId: todoId
+        })
+    }
+
+    editFinalTodo = (id, plainText) => {
+        console.log("Dentro Final editTodo: ", id, plainText)
+        editToDoList(id, plainText).then(() => this.setState({
+            editTodoId: ""
+        }, () => {
+            this.updateToDoList()
+        })).catch(e => console.error("IMPOSSIBILE AGGIORNARE IL VALORE", e))
+
+    }
+
     updateToDoList() {
         getToDoList().then(response => {
             this.setState({
                 todos: response
-                //devo metterli in inversamente!!
             })
         }).catch(e => console.error('IMPOSSIBILE AGGIORNARE LA LISTA', e))
     }
@@ -51,7 +69,7 @@ export default class ToDoList extends Component {
     }
 
     // vedere bene cosa fa il preventDefault
-    // aggiungo un todo con i suoi parametri prima di tutti gli altri todo.
+    // aggiungo un _todo con i suoi parametri prima di tutti gli altri _todo.
 
 
     handleSubmit = (text) => {
@@ -82,14 +100,16 @@ export default class ToDoList extends Component {
                                 <ListItem
                                     key={todo.id}
                                     deleteFnc={() => this.deleteTodo(todo.id)}
-                                    editFnc={this.editTodo}
-                                    id={todo.id}
+                                    editFnc={() => this.editTodo(todo.id)}
+                                    editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                                    enabled={todo.id === this.state.editTodoId}
                                     creationDate={todo.createdAt}
                                     plainText={todo.plainText}/>
                             )}
                 </ul>
             </div>
-
         )
     }
+
+
 }
