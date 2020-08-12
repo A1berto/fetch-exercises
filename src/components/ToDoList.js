@@ -35,6 +35,7 @@ export default class ToDoList extends Component {
     */
 
     sortById = () => {
+        // FIXME ogni volta che chiami la funzione chiami il sort non va bene!
         const app = this.state.todos.sort((todoA, todoB) => todoB.id - todoA.id)
         this.setState({
             todosById: app,
@@ -43,6 +44,8 @@ export default class ToDoList extends Component {
     }
 
     sortByName = () => {
+        // FIXME ogni volta che chiami la funzione chiami il sort non va bene!
+        // FIXME la funzione di sort tra ByName e ByCharacter è simile riutilizzare il codice!
         const app = this.state.todos.sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
         this.setState({
             todosByName: app,
@@ -62,6 +65,7 @@ export default class ToDoList extends Component {
     }
 
     sortByCharcacters = () =>{
+        // FIXME ogni volta che chiami la funzione chiami il sort non va bene!
         const app = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
         this.setState({
             todosByCharcacters: app,
@@ -157,13 +161,13 @@ export default class ToDoList extends Component {
                 </form>
 
                 <ul>
+                    {/* FIXME NON USARE COSI L'OPERATORE TERNARIO usare uno switch per pulizia non si lascia dentro il render!*/}
                     {
                         (this.state.sorted === 0 ? this.state.todosById
                             : this.state.sorted === 1 ? this.state.todosByName
                             : this.state.sorted === 2 ? this.state.todosByCreatedAt
                             : this.state.sorted === 3 ? this.state.todosByCharcacters : "niente")
                             .map(todo =>
-
                                 <ListItem
                                     key={todo.id}
                                     deleteFnc={() => this.deleteTodo(todo.id)}
