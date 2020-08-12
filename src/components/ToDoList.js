@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {deleteToDoList, getToDoList, postToDoList, editToDoList} from '../requests/request'
 import {NewLabelForm} from './NewLabelForm'
 import ListItem from './ListItem'
+import ButtonSort from '../components/ButtonSort'
 
 /*
 IMPORT: con le parentesi graffe mi richiamo una funzione dentro un altro file
@@ -16,6 +17,11 @@ export default class ToDoList extends Component {
         super(props)
         this.state = {
             todos: [],
+            todosById: [],
+            todosByName: [],
+            todosByCreatedAt:[],
+            todosByCharcacters:[],
+            sorted: 0,
             todo: {
                 plainText: '',
             }
@@ -28,6 +34,41 @@ export default class ToDoList extends Component {
     se si aggiornano le props del componente padre
     */
 
+    sortById = () => {
+        const app = this.state.todos.sort((todoA, todoB) => todoB.id - todoA.id)
+        this.setState({
+            todosById: app,
+            sorted: 0
+        })
+    }
+
+    sortByName = () => {
+        const app = this.state.todos.sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
+        this.setState({
+            todosByName: app,
+            sorted: 1
+        })
+    }
+
+    sortByCreatedAt =()=>{
+     //TODO ordinare per createdDate
+        const app = this.state.todos
+        this.setState({
+            todosByCreatedAt: app,
+            sorted: 2
+        },()=>{
+            console.log(this.state.todosByCreatedAt)
+        })
+    }
+
+    sortByCharcacters = () =>{
+        const app = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
+        this.setState({
+            todosByCharcacters: app,
+            sorted: 3
+        })
+    }
+
     deleteTodo = (todoId) => {
         deleteToDoList(todoId).then(succ => {
             this.setState({
@@ -35,7 +76,6 @@ export default class ToDoList extends Component {
             })
         })
     }
-
 
     editTodo = (todoId) => {
         console.log("dentro editTodo: ", todoId)
@@ -52,13 +92,14 @@ export default class ToDoList extends Component {
         }, () => {
             this.updateToDoList()
         })).catch(e => console.error("IMPOSSIBILE AGGIORNARE IL VALORE", e))
-
     }
 
     updateToDoList() {
         getToDoList().then(response => {
             this.setState({
-                todos: response
+                todos: response,
+            }, () => {
+                this.sortById()
             })
         }).catch(e => console.error('IMPOSSIBILE AGGIORNARE LA LISTA', e))
     }
@@ -87,16 +128,42 @@ export default class ToDoList extends Component {
 
     //https://stackoverflow.com/questions/44574367/react-map-is-not-a-function  per le promise
     render() {
-        const {todos} = this.state
 
         return (
             <div className="App">
                 <NewLabelForm handleSubmit={this.handleSubmit}/>
+
+                <span>Sort by: </span>
+                <form>
+                    <ButtonSort
+                        sortBy={() => this.sortByName()}
+                        sortType="Name"
+                        number="1"
+                        sorted={this.state.sorted}
+                    />
+                    <ButtonSort
+                        sortType="CreatedAt"
+                        sortBy={() => this.sortByCreatedAt()}
+                        number="2"
+                        sorted={this.state.sorted}
+                    />
+                    <ButtonSort
+                        sortType="Charcacters"
+                        sortBy={() => this.sortByCharcacters()}
+                        number="3"
+                        sorted={this.state.sorted}
+                    />
+
+                </form>
+
                 <ul>
                     {
-                        todos
-                            .sort((todoA, todoB) => todoB.id - todoA.id)
+                        (this.state.sorted === 0 ? this.state.todosById
+                            : this.state.sorted === 1 ? this.state.todosByName
+                            : this.state.sorted === 2 ? this.state.todosByCreatedAt
+                            : this.state.sorted === 3 ? this.state.todosByCharcacters : "niente")
                             .map(todo =>
+
                                 <ListItem
                                     key={todo.id}
                                     deleteFnc={() => this.deleteTodo(todo.id)}
@@ -104,12 +171,11 @@ export default class ToDoList extends Component {
                                     editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
                                     enabled={todo.id === this.state.editTodoId}
                                     creationDate={todo.createdAt}
-                                    plainText={todo.plainText}/>
-                            )}
+                                    plainText={todo.plainText}/>)
+                    }
+                    {console.log(this.state.sorted + "  è il sorted")}
                 </ul>
             </div>
         )
     }
-
-
 }
