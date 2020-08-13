@@ -10,10 +10,9 @@ export default function ListItem(props) {
 
     return (
         <div style={{display: 'flex', justifyContent: 'center'}}>
-            {/*MOSTRARE ANCHE IL NOME DI CHI HA CREATO IL TODO*/}
             <li key={props.id}>
                 {!props.enabled ?
-                    <span> {props.plainText} ({props.creationDate}) </span>
+                    <span> PLAIN TEXT: {props.plainText}   NAME:{props.name}   DATE:({props.creationDate}) </span>
                     : <>
                         <input type="text"
                                value={label}

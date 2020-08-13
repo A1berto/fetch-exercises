@@ -138,7 +138,8 @@ export default class ToDoList extends Component {
                         editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
                         enabled={todo.id === this.state.editTodoId}
                         creationDate={todo.createdAt}
-                        plainText={todo.plainText}/>))
+                        plainText={todo.plainText}
+                        name ={todo.name}/>))
                 break;
 
             case 1:
@@ -150,7 +151,8 @@ export default class ToDoList extends Component {
                         editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
                         enabled={todo.id === this.state.editTodoId}
                         creationDate={todo.createdAt}
-                        plainText={todo.plainText}/>))
+                        plainText={todo.plainText}
+                        name ={todo.name}/>))
                 break;
             case 2:
                 return (this.state.todosByCreatedAt.map(todo =>
@@ -161,7 +163,8 @@ export default class ToDoList extends Component {
                         editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
                         enabled={todo.id === this.state.editTodoId}
                         creationDate={todo.createdAt}
-                        plainText={todo.plainText}/>))
+                        plainText={todo.plainText}
+                        name ={todo.name}/>))
                 break;
             case 3:
                 return (this.state.todosByCharcacters.map(todo =>
@@ -172,7 +175,8 @@ export default class ToDoList extends Component {
                         editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
                         enabled={todo.id === this.state.editTodoId}
                         creationDate={todo.createdAt}
-                        plainText={todo.plainText}/>))
+                        plainText={todo.plainText}
+                        name ={todo.name}/>))
                 break;
         }
     }
