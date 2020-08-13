@@ -19,8 +19,8 @@ export default class ToDoList extends Component {
             todos: [],
             todosById: [],
             todosByName: [],
-            todosByCreatedAt:[],
-            todosByCharcacters:[],
+            todosByCreatedAt: [],
+            todosByCharcacters: [],
             sorted: 0,
             todo: {
                 plainText: '',
@@ -53,18 +53,18 @@ export default class ToDoList extends Component {
         })
     }
 
-    sortByCreatedAt =()=>{
-     //TODO ordinare per createdDate
+    sortByCreatedAt = () => {
+        //TODO ordinare per createdDate
         const app = this.state.todos
         this.setState({
             todosByCreatedAt: app,
             sorted: 2
-        },()=>{
+        }, () => {
             console.log(this.state.todosByCreatedAt)
         })
     }
 
-    sortByCharcacters = () =>{
+    sortByCharcacters = () => {
         // FIXME ogni volta che chiami la funzione chiami il sort non va bene!
         const app = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
         this.setState({
@@ -127,6 +127,56 @@ export default class ToDoList extends Component {
         }).catch(e => console.error('IMpossibile aggiungere il TODO: ', text))
     }
 
+    displayToDoList = () => {
+        switch (this.state.sorted) {
+            case 0:
+                return (this.state.todosById.map(todo =>
+                    <ListItem
+                        key={todo.id}
+                        deleteFnc={() => this.deleteTodo(todo.id)}
+                        editFnc={() => this.editTodo(todo.id)}
+                        editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                        enabled={todo.id === this.state.editTodoId}
+                        creationDate={todo.createdAt}
+                        plainText={todo.plainText}/>))
+                break;
+
+            case 1:
+                return (this.state.todosByName.map(todo =>
+                    <ListItem
+                        key={todo.id}
+                        deleteFnc={() => this.deleteTodo(todo.id)}
+                        editFnc={() => this.editTodo(todo.id)}
+                        editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                        enabled={todo.id === this.state.editTodoId}
+                        creationDate={todo.createdAt}
+                        plainText={todo.plainText}/>))
+                break;
+            case 2:
+                return (this.state.todosByCreatedAt.map(todo =>
+                    <ListItem
+                        key={todo.id}
+                        deleteFnc={() => this.deleteTodo(todo.id)}
+                        editFnc={() => this.editTodo(todo.id)}
+                        editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                        enabled={todo.id === this.state.editTodoId}
+                        creationDate={todo.createdAt}
+                        plainText={todo.plainText}/>))
+                break;
+            case 3:
+                return (this.state.todosByCharcacters.map(todo =>
+                    <ListItem
+                        key={todo.id}
+                        deleteFnc={() => this.deleteTodo(todo.id)}
+                        editFnc={() => this.editTodo(todo.id)}
+                        editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                        enabled={todo.id === this.state.editTodoId}
+                        creationDate={todo.createdAt}
+                        plainText={todo.plainText}/>))
+                break;
+        }
+    }
+
 
     //!!!!!!!! MAI FARE UN SET STATE ALL'INTERNO DI UN RENDER !!!!!!!!!
 
@@ -161,21 +211,8 @@ export default class ToDoList extends Component {
                 </form>
 
                 <ul>
-                    {/* FIXME NON USARE COSI L'OPERATORE TERNARIO usare uno switch per pulizia non si lascia dentro il render!*/}
                     {
-                        (this.state.sorted === 0 ? this.state.todosById
-                            : this.state.sorted === 1 ? this.state.todosByName
-                            : this.state.sorted === 2 ? this.state.todosByCreatedAt
-                            : this.state.sorted === 3 ? this.state.todosByCharcacters : "niente")
-                            .map(todo =>
-                                <ListItem
-                                    key={todo.id}
-                                    deleteFnc={() => this.deleteTodo(todo.id)}
-                                    editFnc={() => this.editTodo(todo.id)}
-                                    editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
-                                    enabled={todo.id === this.state.editTodoId}
-                                    creationDate={todo.createdAt}
-                                    plainText={todo.plainText}/>)
+                        this.displayToDoList()
                     }
                     {console.log(this.state.sorted + "  è il sorted")}
                 </ul>
