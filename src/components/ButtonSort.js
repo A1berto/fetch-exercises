@@ -9,7 +9,8 @@ export default function ButtonSort(props) {
                 value={props.sortType}
                 className="form-check-input"
                 checked={props.sorted === props.number}
-                onClick={() => props.sortBy()}
+                onChange={() => props.sortBy()}
+                //onClick={() => props.sortBy()}
             />
             {props.sortType}
         </label>
