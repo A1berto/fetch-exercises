@@ -91,25 +91,29 @@ export default class ToDoList extends Component {
         getToDoList().then(response => {
             this.setState({
                 todos: response,
-            })
-        }).then(() => {
-            const appID = this.state.todos.sort((todoA, todoB) => todoB.id - todoA.id)
-            const appNAME = this.state.todos.sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
-            const appCreatedAt = this.state.todos.sort((todoA, todoB) =>
-                new Date(todoA.createdAt).getTime() < new Date(todoB.createdAt).getTime() ? 1 : -1
-            )
-            const appCHARACTERS = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
+            }, () => {
+                const appID = this.state.todos.sort((todoA, todoB) =>{
+                    console.log("ToDoA:", todoA)
+                    console.log("ToDoB:", todoB)
+                    console.log("Number(todoBid)", Number(todoB.id))
+                 return Number(todoB.id) - Number(todoA.id)
+                })
+                console.log("AppID:  ",appID)
+                const appNAME = this.state.todos.sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
+                const appCreatedAt = this.state.todos.sort((todoA, todoB) =>
+                    new Date(todoA.createdAt).getTime() < new Date(todoB.createdAt).getTime() ? 1 : -1
+                )
+                const appCHARACTERS = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
 
-            this.setState({
-                todosById: appID,
-                todosByName: appNAME,
-                todosByCreatedAt: appCreatedAt,
-                todosByCharcacters: appCHARACTERS
+                this.setState({
+                    todosById: appID,
+                    todosByName: appNAME,
+                    todosByCreatedAt: appCreatedAt,
+                    todosByCharcacters: appCHARACTERS
+                }, () => {
+                    console.log("Il mio state: ", this.state)
+                })
             })
-        }).then(() => {
-            this.state.todosByCreatedAt.map((todo) =>
-                console.log("createdAt: ", todo.createdAt)
-            )
         }).catch(e => console.error('IMPOSSIBILE AGGIORNARE LA LISTA', e))
     }
 
@@ -141,12 +145,10 @@ export default class ToDoList extends Component {
         return (
             <div className="App">
                 <NewLabelForm handleSubmit={this.handleSubmit}/>
-
-                <span>Sort by: </span>
                 <form>
                     <ButtonSort
-                        sortBy={() => this.sortByName()}
                         sortType="Name"
+                        sortBy={() => this.sortByName()}
                         number={1}
                         sorted={this.state.sorted}
                     />
@@ -162,7 +164,6 @@ export default class ToDoList extends Component {
                         number={3}
                         sorted={this.state.sorted}
                     />
-
                 </form>
 
                 <ul>
@@ -190,17 +191,13 @@ export default class ToDoList extends Component {
     displayToDoList = () => {
         switch (this.state.sorted) {
             case 0:
-                this.displayListItem(this.state.todosById)
-                break;
+                return this.displayListItem(this.state.todosById)
             case 1:
-                this.displayListItem(this.state.todosByName)
-                break;
+                return this.displayListItem(this.state.todosByName)
             case 2:
-                this.displayListItem(this.state.todosByCreatedAt)
-                break;
+                return this.displayListItem(this.state.todosByCreatedAt)
             case 3:
-                this.displayListItem(this.state.todosByCharcacters)
-                break;
+                return this.displayListItem(this.state.todosByCharcacters)
         }
     }
 }

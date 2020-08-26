@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
-
+import { Button } from '@material-ui/core';
+import { Input } from '@material-ui/core';
 
 /*
     props {
@@ -54,13 +55,16 @@ export const NewLabelForm = props => {
             <form onSubmit={(e) => addTodo(e)}
             >
                 {/*CONTROLLED se settiamo noi il valore - UNCONTROLLED se il valore viene gestito da 'html'*/}
-                <input
+                <Input
+                    style={{paddingTop:"5vh"}}
                     type="text"
                     value={label}
                     onChange={(e) => handleChange(e)}
                     placeholder="add new element"
                 />
-                <button type="submit">Add</button>
+                <Button type="submit" variant="contained" color="primary">
+                    Add
+                </Button>
             </form>
         </>
     )

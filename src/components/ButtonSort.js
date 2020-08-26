@@ -1,13 +1,13 @@
 import React from "react"
+import { Radio } from '@material-ui/core';
 
 export default function ButtonSort(props) {
 
     return (
         <label>
-            <input
-                type="radio"
+            <Radio
                 value={props.sortType}
-                className="form-check-input"
+                color="primary"
                 checked={props.sorted === props.number}
                 onChange={() => props.sortBy()}
                 //onClick={() => props.sortBy()}
