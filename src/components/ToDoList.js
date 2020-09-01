@@ -34,6 +34,11 @@ export default class ToDoList extends Component {
     se si aggiornano le props del componente padre
     */
 
+    componentDidMount() {
+        // la prima volta che viene rederizzato chiamo la lista
+        this.updateToDoList()
+    }
+
     sortById = () => {
         // FIXME ogni volta che chiami la funzione chiami il sort non va bene!
         this.setState({
@@ -89,21 +94,29 @@ export default class ToDoList extends Component {
 
     updateToDoList() {
         getToDoList().then(response => {
+            console.log("Response: ", response)
             this.setState({
                 todos: response,
             }, () => {
-                const appID = this.state.todos.sort((todoA, todoB) =>{
-                    console.log("ToDoA:", todoA)
-                    console.log("ToDoB:", todoB)
-                    console.log("Number(todoBid)", Number(todoB.id))
-                 return Number(todoB.id) - Number(todoA.id)
+                console.log("TODOS: ", this.state.todos)
+
+                //CHIEDERE (rompo la reference.  //TODO)
+                //TODO
+
+
+                const appID = [...this.state.todos].sort((todoA, todoB) => {
+                    return Number(todoB.id) < Number(todoA.id) ? 1 : -1
                 })
-                console.log("AppID:  ",appID)
-                const appNAME = this.state.todos.sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
-                const appCreatedAt = this.state.todos.sort((todoA, todoB) =>
+
+                const appNAME = [...this.state.todos].sort((todoA, todoB) => todoA.name.toLowerCase() > todoB.name.toLowerCase() ? 1 : -1)
+                const appCreatedAt = [...this.state.todos].sort((todoA, todoB) =>
                     new Date(todoA.createdAt).getTime() < new Date(todoB.createdAt).getTime() ? 1 : -1
                 )
-                const appCHARACTERS = this.state.todos.sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
+                const appCHARACTERS = [...this.state.todos].sort((todoA, todoB) => todoA.plainText.length > todoB.plainText.length ? 1 : -1)
+                console.log("AppName:  ", appNAME)
+                console.log("AppChara:  ", appCHARACTERS)
+                console.log("AppCreatedAt:  ", appCreatedAt)
+
 
                 this.setState({
                     todosById: appID,
@@ -117,14 +130,8 @@ export default class ToDoList extends Component {
         }).catch(e => console.error('IMPOSSIBILE AGGIORNARE LA LISTA', e))
     }
 
-    componentDidMount() {
-        // la prima volta che viene rederizzato chiamo la lista
-        this.updateToDoList()
-    }
-
     // vedere bene cosa fa il preventDefault
     // aggiungo un _todo con i suoi parametri prima di tutti gli altri _todo.
-
 
     handleSubmit = (text) => {
         const body = {
@@ -136,12 +143,34 @@ export default class ToDoList extends Component {
         }).catch(e => console.error('IMpossibile aggiungere il TODO: ', text))
     }
 
+    displayListItem = (array) => {
+        return array.map(todo =>
+            <ListItem
+                key={todo.id}
+                deleteFnc={() => this.deleteTodo(todo.id)}
+                editFnc={() => this.editTodo(todo.id)}
+                editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
+                enabled={todo.id === this.state.editTodoId}
+                creationDate={todo.createdAt}
+                plainText={todo.plainText}
+                name={todo.name}/>)
+    }
+    displayToDoList = () => {
+        switch (this.state.sorted) {
+            case 0:
+                return this.displayListItem(this.state.todosById)
+            case 1:
+                return this.displayListItem(this.state.todosByName)
+            case 2:
+                return this.displayListItem(this.state.todosByCreatedAt)
+            case 3:
+                return this.displayListItem(this.state.todosByCharcacters)
+        }
+    }
+
     //!!!!!!!! MAI FARE UN SET STATE ALL'INTERNO DI UN RENDER !!!!!!!!!
-
-
     //https://stackoverflow.com/questions/44574367/react-map-is-not-a-function  per le promise
     render() {
-
         return (
             <div className="App">
                 <NewLabelForm handleSubmit={this.handleSubmit}/>
@@ -174,30 +203,5 @@ export default class ToDoList extends Component {
                 </ul>
             </div>
         )
-    }
-
-    displayListItem = (array) => {
-        return array.map(todo =>
-            <ListItem
-                key={todo.id}
-                deleteFnc={() => this.deleteTodo(todo.id)}
-                editFnc={() => this.editTodo(todo.id)}
-                editFinal={(plaintext) => this.editFinalTodo(todo.id, plaintext)}
-                enabled={todo.id === this.state.editTodoId}
-                creationDate={todo.createdAt}
-                plainText={todo.plainText}
-                name={todo.name}/>)
-    }
-    displayToDoList = () => {
-        switch (this.state.sorted) {
-            case 0:
-                return this.displayListItem(this.state.todosById)
-            case 1:
-                return this.displayListItem(this.state.todosByName)
-            case 2:
-                return this.displayListItem(this.state.todosByCreatedAt)
-            case 3:
-                return this.displayListItem(this.state.todosByCharcacters)
-        }
     }
 }
